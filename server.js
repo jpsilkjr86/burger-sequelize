@@ -3,9 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const methodOverride = require("method-override");
 
-// imports for connection purposes
-const orm = require('./config/orm.js')
-
 // set up express app
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,8 +24,11 @@ var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
+// imports db sequelize module 
+const db = require("./models");
+
 // attempts to establish connection to mysql server
-orm.connect().then(() => {
+db.sequelize.sync().then(function(){
 	// listens to port after connection to server is established
 	app.listen(port, () => {
 		console.log('App listening on port ' + port);
